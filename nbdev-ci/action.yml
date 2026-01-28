@@ -25,6 +25,10 @@ inputs:
     description: "Skip checkout of repo.  Useful when the repo checkout needs to be customized by the calling workflow."
     required: false
     default: 'false'
+  strip:
+    description: "Check that notebooks are stripped?"
+    required: false
+    default: 'false'
 
 runs:
   using: "composite"
@@ -43,6 +47,7 @@ runs:
         SKIP_TEST: ${{ inputs.skip_test }}
         FLAGS: ${{ inputs.flags }}
         TORCH_CPU: "${{ inputs.torch_cpu }}"
+        STRIP: "${{ inputs.strip }}"
       shell: bash
       run: |
         set -ux
@@ -67,15 +72,17 @@ runs:
           echo "git status is not clean"
           false
         fi
-        echo "Trying to strip out notebooks"
-        nbdev_clean
-        echo "Check that strip out was unnecessary"
-        git status -s # display the status to see which nbs need cleaning up
-        if [[ `git status --porcelain -uno` ]]; then
-          git status -uno
-          echo -e "!!! Detected unstripped out notebooks\n!!!Remember to run nbdev_install_hooks"
-          echo -e "This error can also happen if you are using an older version of nbdev relative to what is in CI.  Please try to upgrade nbdev with the command `pip install -U nbdev`"
-          false
+        if [ "$STRIP" == "true" ]; then
+          echo "Trying to strip out notebooks"
+          nbdev_clean
+          echo "Check that strip out was unnecessary"
+          git status -s # display the status to see which nbs need cleaning up
+          if [[ `git status --porcelain -uno` ]]; then
+            git status -uno
+            echo -e "!!! Detected unstripped out notebooks\n!!!Remember to run nbdev_install_hooks"
+            echo -e "This error can also happen if you are using an older version of nbdev relative to what is in CI.  Please try to upgrade nbdev with the command `pip install -U nbdev`"
+            false
+          fi
         fi
         nbdev_export
         if [[ `git status --porcelain -uno` ]]; then
