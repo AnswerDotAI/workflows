@@ -47,7 +47,7 @@ runs:
           wget -q $(curl https://latest.fast.ai/pre/quarto-dev/quarto-cli/linux-amd64.deb)
           sudo dpkg -i quarto*.deb
         else
-          pip install -Uq nbdev>=3
+          pip install -Uq "nbdev>=3"
         fi
         if [ $TORCH_CPU ]; then
           test -f setup.py && pip install -e ".[dev]" --extra-index-url https://download.pytorch.org/whl/cpu

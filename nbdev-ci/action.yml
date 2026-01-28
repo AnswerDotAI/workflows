@@ -50,7 +50,7 @@ runs:
       run: |
         set -ux
         python -m pip install --upgrade pip
-        pip install -U nbdev<3
+        pip install -U "nbdev<3"
         echo "Doing editable install..."
         if [ $TORCH_CPU ]; then
           test -f setup.py && pip install -e ".[dev]" --extra-index-url https://download.pytorch.org/whl/cpu
