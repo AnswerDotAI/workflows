@@ -50,9 +50,9 @@ runs:
           pip install -Uq "nbdev>=3"
         fi
         if [ $TORCH_CPU ]; then
-          test -f setup.py && pip install -e ".[dev]" --extra-index-url https://download.pytorch.org/whl/cpu
+          pip install -e ".[dev]" --extra-index-url https://download.pytorch.org/whl/cpu
         else
-          test -f setup.py && pip install -e ".[dev]"
+          pip install -e ".[dev]"
         fi
         nbdev_docs
     - name: Deploy to GitHub Pages
