@@ -54,7 +54,7 @@ runs:
         else
           pip install -e ".[dev]"
         fi
-        nbdev_docs
+        nbdev-docs
     - name: Deploy to GitHub Pages
       uses: peaceiris/actions-gh-pages@v3
       with:

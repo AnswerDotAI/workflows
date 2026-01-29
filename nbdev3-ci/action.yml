@@ -72,23 +72,23 @@ runs:
         fi
         if [ "$STRIP" == "true" ]; then
           echo "Trying to strip out notebooks"
-          nbdev_clean
+          nbdev-clean
           echo "Check that strip out was unnecessary"
           git status -s # display the status to see which nbs need cleaning up
           if [[ `git status --porcelain -uno` ]]; then
             git status -uno
-            echo -e "!!! Detected unstripped out notebooks\n!!!Remember to run nbdev_install_hooks"
+            echo -e "!!! Detected unstripped out notebooks\n!!!Remember to run nbdev-install-hooks"
             echo -e "This error can also happen if you are using an older version of nbdev relative to what is in CI.  Please try to upgrade nbdev with the command `pip install -U nbdev`"
             false
           fi
         fi
-        nbdev_export
+        nbdev-export
         if [[ `git status --porcelain -uno` ]]; then
-          echo "::error::Notebooks and library are not in sync.  Please run nbdev_export."
+          echo "::error::Notebooks and library are not in sync.  Please run nbdev-export."
           git status -uno
           git diff
           exit 1;
         fi
         if [ ! $SKIP_TEST ]; then
-          nbdev_test --flags "$FLAGS"
+          nbdev-test --flags "$FLAGS"
         fi
