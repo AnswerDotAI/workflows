@@ -77,7 +77,7 @@ runs:
           git status -s # display the status to see which nbs need cleaning up
           if [[ `git status --porcelain -uno` ]]; then
             git status -uno
-            echo -e "!!! Detected unstripped out notebooks\n!!!Remember to run nbdev-install-hooks"
+            echo -e "!!! Detected unstripped out notebooks\n!!!Remember to run nbdev-clean"
             echo -e "This error can also happen if you are using an older version of nbdev relative to what is in CI.  Please try to upgrade nbdev with the command `pip install -U nbdev`"
             false
           fi
