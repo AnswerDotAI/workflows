@@ -9,7 +9,7 @@ This is a GitHub Action that lets you use conda in your workflow. If you're usin
 You'll need to add, at least, this to your `steps`:
 
 ```
-- uses: fastai/workflows/conda-env@master
+- uses: AnswerDotAI/workflows/conda-env@master
 ```
 
 Here's an example: [fastcore build docs](https://github.com/fastai/fastcore/blob/master/.github/workflows/docs.yml).

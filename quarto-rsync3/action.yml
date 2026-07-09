@@ -29,8 +29,8 @@ inputs:
 runs:
   using: "composite"
   steps:
-    - uses: actions/checkout@v3
-    - uses: actions/setup-python@v4
+    - uses: actions/checkout@v7
+    - uses: actions/setup-python@v6
     - name: Install deps, build docs, and sync
       env:
         SSH_KEY: ${{ inputs.ssh_key }}
@@ -49,7 +49,7 @@ runs:
           pip install -U git+https://github.com/fastai/execnb.git
           pip install -U git+https://github.com/fastai/nbdev.git
         else
-          pip install -U "nbdev>=3.0.12"
+          pip install -U "nbdev>=3.1.1"
         fi
         if [ $TORCH_CPU ]; then
           pip install -e ".[dev]" --extra-index-url https://download.pytorch.org/whl/cpu

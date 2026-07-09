@@ -7,10 +7,10 @@ on: [workflow_dispatch]
 #     runs-on: ubuntu-latest
 #     name: test-broken-link
 #     steps:
-#       - uses: actions/checkout@master
+#       - uses: actions/checkout@v7
 #         with:
 #           repository: 'fastai/fastlinkcheck'  
-#       - uses: actions/setup-python@v4
+#       - uses: actions/setup-python@v6
 #       - name: check for broken links
 #         run: |
 #           pip install fastlinkcheck
@@ -27,13 +27,13 @@ jobs:
     runs-on: ubuntu-latest
     name: test-broken-link
     steps:
-      - uses: actions/checkout@master
+      - uses: actions/checkout@v7
         with:
           repository: 'fastai/fastlinkcheck'  
-      - uses: actions/setup-python@v4
+      - uses: actions/setup-python@v6
       - name: check for broken links
         id: links
-        uses: fastai/workflows/broken_links@master
+        uses: AnswerDotAI/workflows/broken_links@master
         with:
           path: "_example"
           exit_on_found: ${{ matrix.exit_on_found }} 
@@ -43,7 +43,7 @@ jobs:
           echo "logs_broken_links: ${LINK_LOGS}"
         env:
           LINK_LOGS: "${{ steps.links.outputs.logs_broken_links }}"  
-      - uses: fastai/workflows/open_issue@master
+      - uses: AnswerDotAI/workflows/open_issue@master
         if: steps.links.outputs.bool_broken_links == 'True'
         id: open_issue
         with:
@@ -67,8 +67,8 @@ jobs:
 #     runs-on: ubuntu-latest
 #     name: test-open-issue
 #     steps:
-#     - uses: actions/setup-python@v4
-#     - uses: fastai/workflows/open_issue@master
+#     - uses: actions/setup-python@v6
+#     - uses: AnswerDotAI/workflows/open_issue@master
 #       id: open_issue
 #       with:
 #         repo: ${{ github.repository }}

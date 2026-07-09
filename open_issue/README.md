@@ -31,7 +31,7 @@ outputs:
     description: "Same as related_issue_num except returns the URL for the issue instead of the issue number."
 ```
 
-Full specification can be found [here](https://github.com/fastai/workflows/blob/master/open_issue/action.yml)
+Full specification can be found [here](https://github.com/AnswerDotAI/workflows/blob/master/open_issue/action.yml)
 
 
 ## Suggested Usage
@@ -45,8 +45,8 @@ jobs:
     runs-on: ubuntu-latest
     name: test-open-issue
     steps:
-    - uses: actions/setup-python@v4
-    - uses: fastai/workflows/open_issue@master
+    - uses: actions/setup-python@v6
+    - uses: AnswerDotAI/workflows/open_issue@master
       id: open_issue
       with:
         repo: ${{ github.repository }}

@@ -25,8 +25,8 @@ inputs:
 runs:
   using: "composite"
   steps:
-    - uses: actions/checkout@v3
-    - uses: actions/setup-python@v4
+    - uses: actions/checkout@v7
+    - uses: actions/setup-python@v6
       with:
         python-version: ${{ inputs.version }}
         cache: "pip"
@@ -47,7 +47,7 @@ runs:
           wget -q $(curl https://latest.fast.ai/pre/quarto-dev/quarto-cli/linux-amd64.deb)
           sudo dpkg -i quarto*.deb
         else
-          pip install -Uq "nbdev>=3"
+          pip install -Uq "nbdev>=3.1.1"
         fi
         if [ $TORCH_CPU ]; then
           pip install -e ".[dev]" --extra-index-url https://download.pytorch.org/whl/cpu
@@ -56,7 +56,7 @@ runs:
         fi
         nbdev-docs
     - name: Deploy to GitHub Pages
-      uses: peaceiris/actions-gh-pages@v3
+      uses: peaceiris/actions-gh-pages@v4
       with:
         github_token: ${{ inputs.ghtoken }}
         force_orphan: true

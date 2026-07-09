@@ -9,7 +9,7 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-    - uses: fastai/workflows/ssh@master
+    - uses: AnswerDotAI/workflows/ssh@master
       with:
         ssh_key: ${{ secrets.DH_KEY }}
     - name: create tar
@@ -27,7 +27,7 @@ jobs:
         tar czf j901-linux.tgz j901
         scp j901-linux.tgz jeremyphoward@ps625762.dreamhostps.com:files.fast.ai/files/
     - name: Upload
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v7
       with:
         name: j-linux.tgz
         path: j901-linux.tgz

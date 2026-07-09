@@ -9,8 +9,8 @@ jobs:
   build:
     runs-on: macos-latest
     steps:
-    - uses: fastai/workflows/ssh@master
+    - uses: AnswerDotAI/workflows/ssh@master
       with:
         ssh_key: ${{ secrets.DH_KEY }}
     - name: Setup tmate session
-      uses: mxschmitt/action-tmate@v2
+      uses: mxschmitt/action-tmate@v3
