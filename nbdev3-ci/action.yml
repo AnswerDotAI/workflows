@@ -56,7 +56,7 @@ runs:
           pip install -U git+https://github.com/fastai/execnb.git
           pip install -U git+https://github.com/fastai/nbdev.git
         else
-          pip install -U "nbdev>=3.1.1"
+          pip install -U "nbdev>=3.2.1"
         fi
         echo "Doing editable install..."
         if [ $TORCH_CPU ]; then

@@ -30,7 +30,7 @@ runs:
       with:
         python-version: ${{ inputs.version }}
         cache: "pip"
-        cache-dependency-path: settings.ini
+        cache-dependency-path: pyproject.toml
     - name: Install Dependencies
       env:
         USE_PRE: ${{ inputs.pre }}
@@ -47,7 +47,7 @@ runs:
           wget -q $(curl https://latest.fast.ai/pre/quarto-dev/quarto-cli/linux-amd64.deb)
           sudo dpkg -i quarto*.deb
         else
-          pip install -Uq "nbdev>=3.1.1"
+          pip install -Uq "nbdev>=3.2.1"
         fi
         if [ $TORCH_CPU ]; then
           pip install -e ".[dev]" --extra-index-url https://download.pytorch.org/whl/cpu
