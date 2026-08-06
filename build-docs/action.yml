@@ -40,7 +40,7 @@ runs:
         else
           pip install -Uq -e .[dev]
         fi
-        pip install -U 'jupyter_client<7'
+        pip install -Uq 'jupyter_client<7'
         nbdev_build_docs
         cd docs
         bundle i

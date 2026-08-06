@@ -38,7 +38,7 @@ runs:
       shell: bash
       run: |
         set -ux
-        python -m pip install --upgrade pip
+        python -m pip install -q --upgrade pip
         if [ $USE_PRE ]; then
           pip install -Uq git+https://github.com/fastai/ghapi.git
           pip install -Uq git+https://github.com/fastai/fastcore.git
@@ -50,9 +50,9 @@ runs:
           pip install -Uq "nbdev>=3.2.1"
         fi
         if [ $TORCH_CPU ]; then
-          pip install -e ".[dev]" --extra-index-url https://download.pytorch.org/whl/cpu
+          pip install -q -e ".[dev]" --extra-index-url https://download.pytorch.org/whl/cpu
         else
-          pip install -e ".[dev]"
+          pip install -q -e ".[dev]"
         fi
         nbdev-docs
     - name: Deploy to GitHub Pages

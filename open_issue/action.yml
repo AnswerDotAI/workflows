@@ -34,7 +34,7 @@ runs:
       run: |
         git clone https://github.com/AnswerDotAI/workflows.git --depth 1
         echo "PYTHONPATH=${PYTHONPATH}:$(pwd)/workflows/workflow_python_scripts" >> $GITHUB_ENV
-        pip install fastcore PyGithub
+        pip install -q fastcore PyGithub
       shell: bash
     - name: Create Issue
       id: issue

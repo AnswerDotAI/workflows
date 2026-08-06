@@ -43,18 +43,18 @@ runs:
         echo "$SSH_KEY" > ~/.ssh/id_rsa
         echo -e 'Host *\n  StrictHostKeyChecking no' > ~/.ssh/config
         chmod 600 ~/.ssh/*
-        python -m pip install --upgrade pip
+        python -m pip install -q --upgrade pip
         if [ $USE_PRE ]; then
-          pip install -U git+https://github.com/fastai/fastcore.git
-          pip install -U git+https://github.com/fastai/execnb.git
-          pip install -U git+https://github.com/fastai/nbdev.git
+          pip install -Uq git+https://github.com/fastai/fastcore.git
+          pip install -Uq git+https://github.com/fastai/execnb.git
+          pip install -Uq git+https://github.com/fastai/nbdev.git
         else
-          pip install -U "nbdev>=3.2.1"
+          pip install -Uq "nbdev>=3.2.1"
         fi
         if [ $TORCH_CPU ]; then
-          pip install -e ".[dev]" --extra-index-url https://download.pytorch.org/whl/cpu
+          pip install -q -e ".[dev]" --extra-index-url https://download.pytorch.org/whl/cpu
         else
-          pip install -e ".[dev]"
+          pip install -q -e ".[dev]"
         fi
         nbdev-docs
         rsync $(echo ${delete:+'--delete'}) -az _docs/ ${{ inputs.username }}@${{ inputs.hostname }}:${{ inputs.dest_path }}/

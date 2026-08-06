@@ -29,6 +29,18 @@ inputs:
     description: "Check that notebooks are stripped?"
     required: false
     default: 'true'
+  uv:
+    description: "Use uv (venv + uv pip) instead of setup-python and pip?"
+    required: false
+    default: ''
+  setup:
+    description: "Shell commands run after install, before tests (e.g. writing config files)"
+    required: false
+    default: ''
+  test_args:
+    description: "Extra arguments appended to the nbdev-test command"
+    required: false
+    default: ''
 
 runs:
   using: "composite"
@@ -36,34 +48,52 @@ runs:
     - uses: actions/checkout@v7
       if: ${{ inputs.skip_checkout != 'true' }}
     - uses: actions/setup-python@v6
+      if: ${{ inputs.uv == '' }}
       with:
         python-version: ${{ inputs.version }}
-    - name: Test with nbdev
+    - uses: astral-sh/setup-uv@v7
+      if: ${{ inputs.uv != '' }}
+      with:
+        enable-cache: true
+    - name: Install
       env:
         USE_PRE: ${{ inputs.pre }}
-        OBJC_DISABLE_INITIALIZE_FORK_SAFETY: YES
-        SKIP_TEST: ${{ inputs.skip_test }}
-        FLAGS: ${{ inputs.flags }}
         TORCH_CPU: "${{ inputs.torch_cpu }}"
+        USE_UV: "${{ inputs.uv }}"
+      shell: bash
+      run: |
+        set -ux
+        if [ $USE_UV ]; then
+          uv venv --python ${{ inputs.version }}
+          source .venv/bin/activate
+          PIP="uv pip"
+          echo "$PWD/.venv/bin" >> $GITHUB_PATH
+          echo "VIRTUAL_ENV=$PWD/.venv" >> $GITHUB_ENV
+        else
+          python -m pip install -q --upgrade pip
+          PIP="pip"
+        fi
+        if [ $USE_PRE ]; then
+          $PIP install -Uq git+https://github.com/fastai/fastcore.git
+          $PIP install -Uq git+https://github.com/fastai/ghapi.git
+          $PIP install -Uq git+https://github.com/fastai/execnb.git
+          $PIP install -Uq git+https://github.com/fastai/nbdev.git
+        else
+          $PIP install -Uq "nbdev>=3.2.1"
+        fi
+        echo "Doing editable install..."
+        if [ $TORCH_CPU ]; then
+          $PIP install -q -e ".[dev]" --extra-index-url https://download.pytorch.org/whl/cpu
+        else
+          $PIP install -q -e ".[dev]"
+        fi
+    - name: Check notebooks stripped and exported
+      env:
+        OBJC_DISABLE_INITIALIZE_FORK_SAFETY: YES
         STRIP: "${{ inputs.strip }}"
       shell: bash
       run: |
         set -ux
-        python -m pip install --upgrade pip
-        if [ $USE_PRE ]; then
-          pip install -U git+https://github.com/fastai/fastcore.git
-          pip install -U git+https://github.com/fastai/ghapi.git
-          pip install -U git+https://github.com/fastai/execnb.git
-          pip install -U git+https://github.com/fastai/nbdev.git
-        else
-          pip install -U "nbdev>=3.2.1"
-        fi
-        echo "Doing editable install..."
-        if [ $TORCH_CPU ]; then
-          pip install -e ".[dev]" --extra-index-url https://download.pytorch.org/whl/cpu
-        else
-          pip install -e ".[dev]"
-        fi
         echo "Check we are starting with clean git checkout"
         if [[ `git status --porcelain -uno` ]]; then
           git diff
@@ -89,6 +119,15 @@ runs:
           git diff
           exit 1;
         fi
+    - name: Test
+      env:
+        OBJC_DISABLE_INITIALIZE_FORK_SAFETY: YES
+        SKIP_TEST: ${{ inputs.skip_test }}
+        FLAGS: ${{ inputs.flags }}
+      shell: bash
+      run: |
+        set -ux
+        ${{ inputs.setup }}
         if [ ! $SKIP_TEST ]; then
-          nbdev-test --flags "$FLAGS"
+          nbdev-test --flags "$FLAGS" ${{ inputs.test_args }}
         fi
