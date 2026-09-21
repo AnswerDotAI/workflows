@@ -81,7 +81,7 @@ runs:
           $PIP install -Uq git+https://github.com/fastai/execnb.git
           $PIP install -Uq git+https://github.com/fastai/nbdev.git
         else
-          $PIP install -Uq "nbdev>=3.2.1"
+          $PIP install -Uq "nbdev>=3.3.21"
         fi
         echo "Doing editable install..."
         if [ $TORCH_CPU ]; then
