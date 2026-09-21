@@ -67,11 +67,13 @@ runs:
           uv venv --python ${{ inputs.version }}
           source .venv/bin/activate
           PIP="uv pip"
+          TORCH_FLAGS="--torch-backend cpu --index-strategy unsafe-best-match"
           echo "$PWD/.venv/bin" >> $GITHUB_PATH
           echo "VIRTUAL_ENV=$PWD/.venv" >> $GITHUB_ENV
         else
           python -m pip install -q --upgrade pip
           PIP="pip"
+          TORCH_FLAGS="--extra-index-url https://download.pytorch.org/whl/cpu"
         fi
         if [ $USE_PRE ]; then
           $PIP install -Uq git+https://github.com/fastai/fastcore.git
@@ -83,7 +85,7 @@ runs:
         fi
         echo "Doing editable install..."
         if [ $TORCH_CPU ]; then
-          $PIP install -q -e ".[dev]" --extra-index-url https://download.pytorch.org/whl/cpu
+          $PIP install -q -e ".[dev]" $TORCH_FLAGS
         else
           $PIP install -q -e ".[dev]"
         fi
